@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>OLS Panel Starter</title></head>
+  <body>
+    <h1>OpenLiteSpeed Panel - Starter</h1>
+    <h2>Create Database</h2>
+    <form action="/create-db" method="post">
+      <label>DB name <input name="db_name" required></label><br>
+      <label>DB user <input name="db_user" required></label><br>
+      <label>DB pass <input name="db_pass" required></label><br>
+      <button type="submit">Create</button>
+    </form>
+    <h2>Create VHost</h2>
+    <form action="/create-vhost" method="post">
+      <label>Domain <input name="domain" required placeholder="example.com"></label><br>
+      <button type="submit">Create VHost</button>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  openlitespeed:
+    image: litespeedtech/openlitespeed:1.7
+    container_name: ols
+    ports:
+      - "80:80"
+      - "443:443"
+      - "7080:7080"
+    volumes:
+      - ./sites:/var/www/vhosts
+      - ./ols-config:/usr/local/lsws/conf
+      - ./ols-scripts:/usr/local/lsws/admin/misc
+    environment:
+      - OLS_ADMIN_PASSWORD=admin
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD=strong_root_password
+    volumes:
+      - db-data:/var/lib/mysql
+    restart: unless-stopped
+
+  panel:
+    build: ./panel
+    container_name: ols-panel
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_ROOT_USER: root
+      DB_ROOT_PASS: strong_root_password
+      OLS_SSH_HOST: ols
+      OLS_CONF_DIR: /usr/local/lsws/conf
+    depends_on:
+      - mariadb
+      - openlitespeed
+    volumes:
+      - ./sites:/var/www/vhosts
+      - ./ols-config:/usr/local/lsws/conf
+      - ./ols-scripts:/usr/local/lsws/admin/misc
+    restart: unless-stopped
+
+volumes:
+  db-data:
